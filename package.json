@@ -1,0 +1,21 @@
+{
+  "name": "bomberman-js",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "start": "node ./server/app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://gitlab.com/lukegeneva/bomberman-js.git"
+  },
+  "author": "Luke Geneva",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://gitlab.com/lukegeneva/bomberman-js/issues"
+  },
+  "homepage": "https://gitlab.com/lukegeneva/bomberman-js#README",
+  "dependencies": {
+    "express": "^4.13.4"
+  }
+}
