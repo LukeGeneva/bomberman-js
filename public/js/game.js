@@ -1,7 +1,7 @@
 var game = new Phaser.Game(800, 600, Phaser.AUTO, 'Bomberman JS', { preload: preload, create: create, update: update });
 
 function preload() {
-	game.load.atlas('test', '../assets/spritesheet.png', '../assets/spritesheet.json',
+	game.load.atlas('bomber', '../assets/spritesheet.png', '../assets/spritesheet.json',
 		Phaser.Loader.TEXTURE_ATLAS_JSON_HASH);
 }
 
@@ -9,11 +9,7 @@ var cursors;
 var player;
 
 function create() {
-	player = game.add.sprite(300, 200, 'test');
-	player.animations.add('walk-north', ['n1.png', 'n2.png', 'n1.png', 'n3.png']);
-	player.animations.add('walk-south', ['s1.png', 's2.png', 's1.png', 's3.png']);
-	player.animations.add('walk-east', ['e1.png', 'e2.png', 'e1.png', 'e3.png']);
-	player.animations.add('walk-west', ['w1.png', 'w2.png', 'w1.png', 'w3.png']);
+	player = new Bomber(game);
 
 	game.physics.startSystem(Phaser.Physics.ARCADE);
 	game.physics.enable(player, Phaser.Physics.ARCADE);
