@@ -1,7 +1,7 @@
 "use strict";
 
 var Bomber = function(game) {
-	Phaser.Sprite.call(this, game, 0, 0, 'bomber');
+	Phaser.Sprite.call(this, game, 0, 0, 'sprites');
 	game.add.existing(this);
 
 	this.animations.add('walk-north', ['n2', 'n1', 'n3', 'n1']);
@@ -52,4 +52,11 @@ Bomber.prototype.die = function() {
 		this.alive = false;
 		this.animations.play('die', 10, false, true);
 	}
+};
+
+Bomber.prototype.placeBomb = function() {
+	var bomb = new Bomb(this.game, 3000);
+	bomb.x = this.x + this.width;
+	bomb.y = this.y;
+	return bomb;
 };
