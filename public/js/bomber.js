@@ -56,7 +56,7 @@ Bomber.prototype.die = function() {
 };
 
 Bomber.prototype.placeBomb = function() {
-	var bomb = new Bomb(this.game, 3000);
+	var bomb = new Bomb(this.game, 3000, 1);
 	switch (this.heading) {
 		case 'north':
 			bomb.x = this.x;

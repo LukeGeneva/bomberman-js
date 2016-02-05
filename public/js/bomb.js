@@ -1,10 +1,11 @@
 "use strict";
 
-var Bomb = function(game, fuseTimeInMilliseconds) {
+var Bomb = function(game, fuseTimeInMilliseconds, explosionRadius) {
 	Phaser.Sprite.call(this, game, 0, 0, 'sprites');
 	game.add.existing(this);
 
 	this.fuseTime = fuseTimeInMilliseconds;
+	this.explosionRadius = explosionRadius;
 	this.animations.frameName = 'bomb1';
 };
 
