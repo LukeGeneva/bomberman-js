@@ -25,21 +25,14 @@ function update() {
 	
 	if (cursors.left.isDown) {
 		player.body.velocity.x = -testSpeed;
-		player.animations.play('walk-west', 6, true);
 	}
 	else if (cursors.right.isDown) {
 		player.body.velocity.x = testSpeed;
-		player.animations.play('walk-east', 6, true);
 	}
 	else if (cursors.up.isDown) {
 		player.body.velocity.y = -testSpeed;
-		player.animations.play('walk-north', 6, true);
 	}
 	else if (cursors.down.isDown) {
 		player.body.velocity.y = testSpeed;
-		player.animations.play('walk-south', 6, true);
-	}
-	else {
-		player.animations.stop();
 	}
 }
