@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 var Bomber = function(game) {
 	Phaser.Sprite.call(this, game, 0, 0, 'sprites');
@@ -11,7 +11,7 @@ var Bomber = function(game) {
 	this.animations.add('die', ['die1', 'die2', 'die3', 'die4', 'die5', 'die6', 'die7', 'die8']);
 	this.animations.frameName = 's1';
 
-	this.heading = "";
+	this.heading = 'south';
 	this.alive = true;
 };
 
@@ -19,30 +19,31 @@ Bomber.prototype = Object.create(Phaser.Sprite.prototype);
 Bomber.prototype.constructor = Bomber;
 
 Bomber.prototype.update = function() {
+	var self = this;
+	var isMoving = function() {
+		return self.body.velocity.x !== 0 || self.body.velocity.y !== 0;
+	}
+
 	if (!this.alive) return;
 
-	var previousHeading = this.heading;
 	if (this.body.velocity.x > 0) {
-		this.heading = "east";
+		this.heading = 'east';
 	}
 	else if (this.body.velocity.x < 0) {
-		this.heading = "west";
+		this.heading = 'west';
 	}
 	else if (this.body.velocity.y > 0) {
-		this.heading = "south";
+		this.heading = 'south';
 	}
 	else if (this.body.velocity.y < 0) {
-		this.heading = "north";
+		this.heading = 'north';
 	}
 	else {
 		this.animations.stop();
-		if (this.heading !== "") {
-			this.animations.frameName = this.heading[0] + '1';
-		}
-		this.heading = "";
+		this.animations.frameName = this.heading[0] + '1';
 	}
 
-	if (this.heading !== previousHeading && this.heading !== "") {
+	if (isMoving() && !this.animations.isPlaying) {
 		this.animations.play('walk-' + this.heading, 6, true);
 	}
 };

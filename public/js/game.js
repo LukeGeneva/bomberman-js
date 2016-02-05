@@ -36,17 +36,19 @@ function update() {
 	player.body.velocity.x = 0;
 	player.body.velocity.y = 0;
 	
-	if (cursors.left.isDown) {
-		player.body.velocity.x = -testSpeed;
-	}
-	else if (cursors.right.isDown) {
-		player.body.velocity.x = testSpeed;
-	}
-	else if (cursors.up.isDown) {
-		player.body.velocity.y = -testSpeed;
-	}
-	else if (cursors.down.isDown) {
-		player.body.velocity.y = testSpeed;
+	if (player.alive) {
+		if (cursors.left.isDown) {
+			player.body.velocity.x = -testSpeed;
+		}
+		else if (cursors.right.isDown) {
+			player.body.velocity.x = testSpeed;
+		}
+		else if (cursors.up.isDown) {
+			player.body.velocity.y = -testSpeed;
+		}
+		else if (cursors.down.isDown) {
+			player.body.velocity.y = testSpeed;
+		}
 	}
 
 	if (game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)) {
