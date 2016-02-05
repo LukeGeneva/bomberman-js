@@ -35,4 +35,8 @@ function update() {
 	else if (cursors.down.isDown) {
 		player.body.velocity.y = testSpeed;
 	}
+
+	if (game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)) {
+		player.die();
+	}
 }
