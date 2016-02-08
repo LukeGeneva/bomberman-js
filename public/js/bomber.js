@@ -61,23 +61,7 @@ Bomber.prototype.die = function() {
 
 Bomber.prototype.placeBomb = function() {
 	var bomb = new Bomb(this.game, 3000, 1);
-	switch (this.heading) {
-		case 'north':
-			bomb.x = this.x;
-			bomb.y = this.y - bomb.height;
-			break;
-		case 'south':
-			bomb.x = this.x;
-			bomb.y = this.y + this.height;
-			break;
-		case 'east':
-			bomb.x = this.x + this.width;
-			bomb.y = this.y;
-			break;
-		case 'west':
-			bomb.x = this.x - bomb.width;
-			bomb.y = this.y;
-			break;
-	}
+	bomb.x = Math.floor(this.x / 16) * 16 + 8;
+	bomb.y = Math.floor(this.bottom / 16) * 16 + 8;
 	return bomb;
 };
