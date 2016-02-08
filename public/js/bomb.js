@@ -3,6 +3,9 @@
 var Bomb = function(game, fuseTimeInMilliseconds, explosionRadius) {
 	Phaser.Sprite.call(this, game, 0, 0, 'sprites');
 	game.add.existing(this);
+	game.physics.enable(this);
+	this.body.collideWorldBounds = true;
+	this.body.immovable = true;
 	this.anchor.setTo(0.5, 0.5);
 
 	this.fuseTime = fuseTimeInMilliseconds;

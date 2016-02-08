@@ -45,6 +45,7 @@ var testSpeed = 100;
 
 function update() {
 	game.physics.arcade.collide(player, fixedLayer);
+	game.physics.arcade.collide(player, bombs);
 
 	player.body.velocity.x = 0;
 	player.body.velocity.y = 0;
