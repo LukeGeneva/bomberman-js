@@ -6,6 +6,7 @@ var Bomb = function(game, fuseTimeInMilliseconds, explosionRadius) {
 	game.physics.enable(this);
 	this.body.collideWorldBounds = true;
 	this.body.immovable = true;
+	this.body.setSize(16, 16);
 	this.anchor.setTo(0.5, 0.5);
 
 	this.fuseTime = fuseTimeInMilliseconds;

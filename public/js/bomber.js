@@ -5,7 +5,7 @@ var Bomber = function(game) {
 	game.add.existing(this);
 	game.physics.enable(this);
 	this.body.collideWorldBounds = true;
-	this.body.setSize(8, 3, 0, 6);
+	this.body.setSize(8, 3, 0, 9);
 	this.anchor.setTo(0.5, 0.5);
 
 	this.animations.add('walk-north', ['n2', 'n1', 'n3', 'n1']);
