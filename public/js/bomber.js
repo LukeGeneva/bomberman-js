@@ -1,8 +1,11 @@
 'use strict';
 
 var Bomber = function(game) {
-	Phaser.Sprite.call(this, game, 0, 0, 'sprites');
+	Phaser.Sprite.call(this, game, 17, 17, 'sprites');
 	game.add.existing(this);
+	game.physics.enable(this);
+	this.body.collideWorldBounds = true;
+	this.body.setSize(10, 3, 2, 16);
 
 	this.animations.add('walk-north', ['n2', 'n1', 'n3', 'n1']);
 	this.animations.add('walk-south', ['s2', 's1', 's3', 's1']);

@@ -1,21 +1,32 @@
 var game = new Phaser.Game(800, 600, Phaser.AUTO, 'Bomberman JS', { preload: preload, create: create, update: update });
 
 function preload() {
-	game.load.atlas('sprites', '../assets/spritesheet.png', '../assets/spritesheet.json',
-		Phaser.Loader.TEXTURE_ATLAS_JSON_HASH);
+	game.load.atlas('sprites', '../assets/spritesheet.png', '../assets/spritesheet.json', Phaser.Loader.TEXTURE_ATLAS_JSON_HASH);
+	game.load.tilemap('tilemap', '../assets/tilemap.json', null, Phaser.Tilemap.TILED_JSON);
+	game.load.image('tiles', '../assets/tiles.png');
 }
 
 var cursors;
+var map;
+var layer;
 var player;
 var bombs;
 
 function create() {
+	game.physics.startSystem(Phaser.Physics.ARCADE);
+
+	map = game.add.tilemap('tilemap');
+	map.addTilesetImage('tiles');
+
+	baseLayer = map.createLayer('Base');
+	fixedLayer = map.createLayer('Fixed');
+	fixedLayer.resizeWorld();
+
+	map.setCollision(1, true, 'Fixed');
+
 	player = new Bomber(game);
 
 	bombs = game.add.group();
-
-	game.physics.startSystem(Phaser.Physics.ARCADE);
-	game.physics.enable(player, Phaser.Physics.ARCADE);
 
 	cursors = game.input.keyboard.createCursorKeys();
 	game.input.keyboard.addKeyCapture(Phaser.Keyboard.SPACEBAR);
@@ -33,6 +44,8 @@ function create() {
 var testSpeed = 100;
 
 function update() {
+	game.physics.arcade.collide(player, fixedLayer);
+
 	player.body.velocity.x = 0;
 	player.body.velocity.y = 0;
 	
