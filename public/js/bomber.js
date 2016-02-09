@@ -5,7 +5,7 @@ var Bomber = function(game) {
 	game.add.existing(this);
 	game.physics.enable(this);
 	this.body.collideWorldBounds = true;
-	this.body.setSize(8, 3, 0, 9);
+	this.body.setSize(6, 3, 0, 6);
 	this.anchor.setTo(0.5, 0.5);
 
 	this.animations.add('walk-north', ['n2', 'n1', 'n3', 'n1']);
@@ -16,6 +16,7 @@ var Bomber = function(game) {
 	this.animations.frameName = 's1';
 
 	this.heading = 'south';
+	this.bombRadius = 1;
 	this.alive = true;
 };
 
@@ -60,8 +61,8 @@ Bomber.prototype.die = function() {
 };
 
 Bomber.prototype.placeBomb = function() {
-	var bomb = new Bomb(this.game, 3000, 1);
-	bomb.x = Math.floor(this.x / 16) * 16 + 8;
-	bomb.y = Math.floor(this.bottom / 16) * 16 + 8;
+	var bombX = Math.floor(this.body.x / 16) * 16 + 8;
+	var bombY = Math.floor(this.body.y / 16) * 16 + 8;
+	var bomb = new Bomb(this.game, bombX, bombY, 3000, this.bombRadius);
 	return bomb;
 };

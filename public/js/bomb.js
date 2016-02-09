@@ -1,9 +1,11 @@
 "use strict";
 
-var Bomb = function(game, fuseTimeInMilliseconds, explosionRadius) {
+var Bomb = function(game, x, y, fuseTimeInMilliseconds, explosionRadius) {
 	Phaser.Sprite.call(this, game, 0, 0, 'sprites');
 	game.add.existing(this);
 	game.physics.enable(this);
+	this.x = x;
+	this.y = y;
 	this.body.collideWorldBounds = true;
 	this.body.immovable = true;
 	this.body.setSize(16, 16);

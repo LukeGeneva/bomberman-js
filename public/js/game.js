@@ -10,6 +10,7 @@ var cursors;
 var map;
 var layer;
 var player;
+var bombers;
 var bombs;
 
 function create() {
@@ -24,9 +25,11 @@ function create() {
 
 	map.setCollision(1, true, 'Fixed');
 
-	player = new Bomber(game);
-
+	bombers = game.add.group();
 	bombs = game.add.group();
+
+	player = new Bomber(game);
+	bombers.add(player);
 
 	cursors = game.input.keyboard.createCursorKeys();
 	game.input.keyboard.addKeyCapture(Phaser.Keyboard.SPACEBAR);
