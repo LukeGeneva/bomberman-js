@@ -1,12 +1,12 @@
 'use strict';
 
 var Bomber = function(game) {
-	Phaser.Sprite.call(this, game, 17, 17, 'sprites');
+	Phaser.Sprite.call(this, game, 32, 32, 'sprites');
 	game.add.existing(this);
 	game.physics.enable(this);
-	this.body.collideWorldBounds = true;
-	this.body.setSize(6, 3, 0, 6);
 	this.anchor.setTo(0.5, 0.5);
+	this.body.collideWorldBounds = true;
+	this.body.setSize(13, 8, 0, 7);
 
 	this.animations.add('walk-north', ['n2', 'n1', 'n3', 'n1']);
 	this.animations.add('walk-south', ['s2', 's1', 's3', 's1']);
@@ -18,6 +18,7 @@ var Bomber = function(game) {
 	this.heading = 'south';
 	this.bombRadius = 1;
 	this.alive = true;
+	this.speed = 80;
 };
 
 Bomber.prototype = Object.create(Phaser.Sprite.prototype);
@@ -60,9 +61,7 @@ Bomber.prototype.die = function() {
 	}
 };
 
-Bomber.prototype.placeBomb = function() {
-	var bombX = Math.floor(this.body.x / 16) * 16 + 8;
-	var bombY = Math.floor(this.body.y / 16) * 16 + 8;
-	var bomb = new Bomb(this.game, bombX, bombY, 3000, this.bombRadius);
+Bomber.prototype.dropBomb = function() {
+	var bomb = new Bomb(this.game, 3000, this.bombRadius);
 	return bomb;
 };

@@ -6,20 +6,22 @@ function preload() {
 	game.load.image('tiles', '../assets/tiles.png');
 }
 
-var cursors;
 var map;
-var layer;
+var fixedLayer;
 var player;
 var bombers;
 var bombs;
 
+var inputMessenger;
+
 function create() {
+	inputMessenger = new InputMessenger(game);
 	game.physics.startSystem(Phaser.Physics.ARCADE);
 
 	map = game.add.tilemap('tilemap');
 	map.addTilesetImage('tiles');
 
-	baseLayer = map.createLayer('Base');
+	map.createLayer('Base');
 	fixedLayer = map.createLayer('Fixed');
 	fixedLayer.resizeWorld();
 
@@ -31,44 +33,49 @@ function create() {
 	player = new Bomber(game);
 	bombers.add(player);
 
-	cursors = game.input.keyboard.createCursorKeys();
-	game.input.keyboard.addKeyCapture(Phaser.Keyboard.SPACEBAR);
-
-	var placeBombKey = game.input.keyboard.addKey(Phaser.Keyboard.D);
-	placeBombKey.onDown.add(function(key) {
-		if (player.alive) {
-			var bomb = player.placeBomb();
-			bombs.add(bomb);
-			bomb.startFuse();
-		}
-	});
+	inputMessenger.moveBomber.add(handleMoveRequest, this);
+	inputMessenger.stopBomber.add(handleStopRequest, this);
+	inputMessenger.dropBomb.add(handleBombDropRequest, this);
 }
 
-var testSpeed = 100;
-
 function update() {
-	game.physics.arcade.collide(player, fixedLayer);
-	game.physics.arcade.collide(player, bombs);
+	game.physics.arcade.collide(bombers, fixedLayer);
+	game.physics.arcade.collide(bombers, bombs);
 
+	inputMessenger.dispatch();
+}
+
+function handleMoveRequest(sender, direction) {
 	player.body.velocity.x = 0;
 	player.body.velocity.y = 0;
-	
-	if (player.alive) {
-		if (cursors.left.isDown) {
-			player.body.velocity.x = -testSpeed;
-		}
-		else if (cursors.right.isDown) {
-			player.body.velocity.x = testSpeed;
-		}
-		else if (cursors.up.isDown) {
-			player.body.velocity.y = -testSpeed;
-		}
-		else if (cursors.down.isDown) {
-			player.body.velocity.y = testSpeed;
-		}
-	}
 
-	if (game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)) {
-		player.die();
+	switch (direction) {
+		case 'north':
+			player.body.velocity.y = -player.speed;
+			break;
+		case 'south':
+			player.body.velocity.y = player.speed;
+			break;
+		case 'east':
+			player.body.velocity.x = player.speed;
+			break;
+		case 'west':
+			player.body.velocity.x = -player.speed;
+			break;
 	}
+}
+
+function handleStopRequest(sender) {
+	player.body.velocity.x = 0;
+	player.body.velocity.y = 0;
+}
+
+function handleBombDropRequest(sender) {
+	var bombX = Math.floor(player.body.center.x / 16) * 16 + 8;
+	var bombY = Math.floor(player.body.center.y / 16) * 16 + 8;
+	var bomb = player.dropBomb();
+	bombs.add(bomb);
+	bomb.x = bombX;
+	bomb.y = bombY;
+	bomb.startFuse();
 }

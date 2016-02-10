@@ -1,13 +1,9 @@
 "use strict";
 
-var Bomb = function(game, x, y, fuseTimeInMilliseconds, explosionRadius) {
+var Bomb = function(game, fuseTimeInMilliseconds, explosionRadius) {
 	Phaser.Sprite.call(this, game, 0, 0, 'sprites');
 	game.add.existing(this);
 	game.physics.enable(this);
-	this.x = x;
-	this.y = y;
-	this.body.collideWorldBounds = true;
-	this.body.immovable = true;
 	this.body.setSize(16, 16);
 	this.anchor.setTo(0.5, 0.5);
 
@@ -20,6 +16,8 @@ Bomb.prototype = Object.create(Phaser.Sprite.prototype);
 Bomb.prototype.constructor = Bomb;
 
 Bomb.prototype.update = function() {
+	this.body.immovable = this.body.immovable || !game.physics.arcade.overlap(this.body, bombers);
+
 	if (this.fuseStartTime) {
 		var endTime = this.fuseStartTime + this.fuseTime;
 		var pctDone = (endTime - Date.now()) / parseFloat(this.fuseTime);
