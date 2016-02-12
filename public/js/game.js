@@ -35,14 +35,18 @@ function create() {
 	player.y = 24;
 	bombers.add(player);
 
-	inputMessenger.moveBomber.add(handleMoveRequest, this);
-	inputMessenger.stopBomber.add(handleStopRequest, this);
-	inputMessenger.dropBomb.add(handleBombDropRequest, this);
+	inputMessenger.moveBomber.add(handleMoveRequest);
+	inputMessenger.stopBomber.add(handleStopRequest);
+	inputMessenger.dropBomb.add(handleBombDropRequest);
 }
 
 function update() {
 	game.physics.arcade.collide(bombers, fixedLayer);
 	game.physics.arcade.collide(bombers, bombs);
+
+	bombs.forEach(function(bomb) {
+		bomb.body.immovable = bomb.body.immovable || !game.physics.arcade.overlap(bomb.body, bombers);
+	});
 
 	inputMessenger.dispatch();
 }
@@ -79,11 +83,16 @@ function handleStopRequest(sender) {
 function handleBombDropRequest(sender) {
 	var bombX = Math.floor(player.body.center.x / map.tileWidth) * map.tileWidth + map.tileWidth / 2;
 	var bombY = Math.floor(player.body.center.y / map.tileHeight) * map.tileHeight + map.tileHeight / 2;
-	var bomb = player.dropBomb();
+	var bomb = player.createBomb();
+	bomb.fuseExpired.add(detonateBomb, bomb);
 	bombs.add(bomb);
 	bomb.x = bombX;
 	bomb.y = bombY;
 	bomb.startFuse();
+}
+
+function detonateBomb() {
+	console.log('Boom at ' + this.x + ', ' + this.y);
 }
 
 function calculateHelperXVelocity() {
