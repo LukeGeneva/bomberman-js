@@ -33,7 +33,6 @@ function create() {
 	player = new Bomber(game);
 	player.x = 24;
 	player.y = 24;
-	game.add.existing(player);
 	bombers.add(player);
 
 	inputMessenger.moveBomber.add(handleMoveRequest, this);
