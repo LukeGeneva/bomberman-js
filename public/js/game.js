@@ -1,57 +1,94 @@
-var game = new Phaser.Game(800, 600, Phaser.AUTO, 'Bomberman JS', { preload: preload, create: create, update: update });
+var game = new Phaser.Game(
+	800, 600,
+	Phaser.AUTO,
+	'Bomberman JS',
+	{ preload: preload, create: create, update: update });
 
 function preload() {
-	game.load.atlas('sprites', '../assets/spritesheet.png', '../assets/spritesheet.json', Phaser.Loader.TEXTURE_ATLAS_JSON_HASH);
-	game.load.tilemap('tilemap', '../assets/tilemap.json', null, Phaser.Tilemap.TILED_JSON);
+	game.load.atlas(
+		'sprites',
+		'../assets/spritesheet.png',
+		'../assets/spritesheet.json',
+		Phaser.Loader.TEXTURE_ATLAS_JSON_HASH);
+
+	game.load.tilemap(
+		'tilemap',
+		'../assets/tilemap.json',
+		null,
+		Phaser.Tilemap.TILED_JSON);
+
 	game.load.image('tiles', '../assets/tiles.png');
 }
 
 var map;
-var fixedLayer;
+var fixedTileLayer;
+
 var player;
-var bombers;
-var bombs;
+var bomberGroup;
+var bombGroup;
 
 var inputMessenger;
 
 function create() {
-	inputMessenger = new InputMessenger(game);
-	game.physics.startSystem(Phaser.Physics.ARCADE);
+	initPhysics();
+	initMap();
+	initGroups();
+	initPlayer();
+	initInputHandlers();
+}
 
+function initPhysics() {
+	game.physics.startSystem(Phaser.Physics.ARCADE);
+}
+
+function initMap() {
 	map = game.add.tilemap('tilemap');
 	map.addTilesetImage('tiles');
-
-	map.createLayer('Base');
-	fixedLayer = map.createLayer('Fixed');
-	fixedLayer.resizeWorld();
-
+	initMapLayers();
 	map.setCollision(1, true, 'Fixed');
+}
 
-	bombers = game.add.group();
-	bombs = game.add.group();
+function initMapLayers() {
+	map.createLayer('Base');
+	fixedTileLayer = map.createLayer('Fixed');
+	fixedTileLayer.resizeWorld();
+}
 
+function initGroups() {
+	bomberGroup = game.add.group();
+	bombGroup = game.add.group();
+}
+
+function initPlayer() {
 	player = new Bomber(game);
 	player.x = 24;
 	player.y = 24;
-	bombers.add(player);
+	bomberGroup.add(player);
+}
 
+function initInputHandlers() {
+	inputMessenger = new InputMessenger(game);
 	inputMessenger.moveBomber.add(handleMoveRequest);
 	inputMessenger.stopBomber.add(handleStopRequest);
 	inputMessenger.dropBomb.add(handleBombDropRequest);
 }
 
 function update() {
-	game.physics.arcade.collide(bombers, fixedLayer);
-	game.physics.arcade.collide(bombers, bombs);
+	runCollisions();
 
-	bombs.forEach(function(bomb) {
-		bomb.body.immovable = bomb.body.immovable || !game.physics.arcade.overlap(bomb.body, bombers);
+	bombGroup.forEach(function(bomb) {
+		bomb.body.immovable = bomb.body.immovable || !game.physics.arcade.overlap(bomb.body, bomberGroup);
 	});
 
 	inputMessenger.dispatch();
 }
 
-function handleMoveRequest(sender, direction) {
+function runCollisions() {
+	game.physics.arcade.collide(bomberGroup, fixedTileLayer);
+	game.physics.arcade.collide(bomberGroup, bombGroup);
+}
+
+function handleMoveRequest(direction) {
 	player.body.velocity.x = 0;
 	player.body.velocity.y = 0;
 
@@ -75,34 +112,32 @@ function handleMoveRequest(sender, direction) {
 	}
 }
 
-function handleStopRequest(sender) {
+function handleStopRequest() {
 	player.body.velocity.x = 0;
 	player.body.velocity.y = 0;
 }
 
-function handleBombDropRequest(sender) {
-	var bombX = Math.floor(player.body.center.x / map.tileWidth) * map.tileWidth + map.tileWidth / 2;
-	var bombY = Math.floor(player.body.center.y / map.tileHeight) * map.tileHeight + map.tileHeight / 2;
+function handleBombDropRequest() {
 	var bomb = player.createBomb();
-	bomb.fuseExpired.add(detonateBomb, bomb);
-	bombs.add(bomb);
-	bomb.x = bombX;
-	bomb.y = bombY;
+	var bombTile = map.getTileWorldXY(player.body.center.x, player.body.center.y);
+	centerBombInTile(bomb, bombTile);
+	bombGroup.add(bomb);
 	bomb.startFuse();
 }
 
-function detonateBomb() {
-	console.log('Boom at ' + this.x + ', ' + this.y);
+function centerBombInTile(bomb, tile) {
+	bomb.x = tile.worldX + tile.centerX;
+	bomb.y = tile.worldY + tile.centerY;
 }
 
 function calculateHelperXVelocity() {
 	var playerTile = map.getTileWorldXY(player.body.center.x, player.body.center.y);
 	var destinationTile;
 	if (player.body.blocked.up) {
-		destinationTile = map.getTileAbove(map.getLayer(fixedLayer), playerTile.x, playerTile.y);
+		destinationTile = map.getTileAbove(map.getLayer(fixedTileLayer), playerTile.x, playerTile.y);
 	}
 	else if (player.body.blocked.down) {
-		destinationTile = map.getTileBelow(map.getLayer(fixedLayer), playerTile.x, playerTile.y);
+		destinationTile = map.getTileBelow(map.getLayer(fixedTileLayer), playerTile.x, playerTile.y);
 	}
 	else {
 		return 0;
@@ -124,10 +159,10 @@ function calculateHelperYVelocity() {
 	var playerTile = map.getTileWorldXY(player.body.center.x, player.body.center.y);
 	var destinationTile;
 	if (player.body.blocked.left) {
-		destinationTile = map.getTileLeft(map.getLayer(fixedLayer), playerTile.x, playerTile.y);
+		destinationTile = map.getTileLeft(map.getLayer(fixedTileLayer), playerTile.x, playerTile.y);
 	}
 	else if (player.body.blocked.right) {
-		destinationTile = map.getTileRight(map.getLayer(fixedLayer), playerTile.x, playerTile.y);
+		destinationTile = map.getTileRight(map.getLayer(fixedTileLayer), playerTile.x, playerTile.y);
 	}
 	else {
 		return 0;

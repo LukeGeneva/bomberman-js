@@ -1,11 +1,9 @@
-"use strict";
+'use strict';
 
 var Bomb = function(game) {
 	var self = this;
 	var ticking = false;
 	var fuseStartTime = 0;
-
-	this.fuseExpired = new Phaser.Signal();
 
 	var construct = function() {
 		Phaser.Sprite.call(self, game, 0, 0, 'sprites');
@@ -28,9 +26,13 @@ var Bomb = function(game) {
 		var endTime = fuseStartTime + self.fuseTime;
 		var done = Date.now() >= endTime;
 		if (done) {
-			ticking = false;
-			self.fuseExpired.dispatch();
+			explode();
 		}
+	};
+
+	var explode = function() {
+		ticking = false;
+		self.destroy();
 	};
 
 	this._startFuse = function() {
