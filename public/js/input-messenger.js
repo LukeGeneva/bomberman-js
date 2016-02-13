@@ -13,27 +13,27 @@ var InputMessenger = function(game) {
 	this.dispatch = function() {
 		var hasDirectionalInput = false;
 		if (cursors.right.isDown) {
-			self.moveBomber.dispatch(this, 'east');
+			self.moveBomber.dispatch('east');
 			hasDirectionalInput = true;
 		}
 		if (cursors.left.isDown) {
-			self.moveBomber.dispatch(this, 'west');
+			self.moveBomber.dispatch('west');
 			hasDirectionalInput = true;
 		}
 		if (cursors.up.isDown) {
-			self.moveBomber.dispatch(this, 'north');
+			self.moveBomber.dispatch('north');
 			hasDirectionalInput = true;
 		}
 		if (cursors.down.isDown) {
-			self.moveBomber.dispatch(this, 'south');
+			self.moveBomber.dispatch('south');
 			hasDirectionalInput = true;
 		}
 		if (!hasDirectionalInput) {
-			self.stopBomber.dispatch(this);
+			self.stopBomber.dispatch();
 		}
 
 		if (bombKey.isDown) {
-			self.dropBomb.dispatch(this);
+			self.dropBomb.dispatch();
 		}
 	};
 };

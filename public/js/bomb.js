@@ -1,33 +1,56 @@
-"use strict";
+'use strict';
 
-var Bomb = function(game, fuseTimeInMilliseconds, explosionRadius) {
-	Phaser.Sprite.call(this, game, 0, 0, 'sprites');
-	game.add.existing(this);
-	game.physics.enable(this);
-	this.body.setSize(16, 16);
-	this.anchor.setTo(0.5, 0.5);
+var Bomb = function(game) {
+	var self = this;
+	var ticking = false;
+	var fuseStartTime = 0;
 
-	this.fuseTime = fuseTimeInMilliseconds;
-	this.explosionRadius = explosionRadius;
-	this.animations.add('tick', ['bomb1', 'bomb2', 'bomb3', 'bomb2']);
+	var construct = function() {
+		Phaser.Sprite.call(self, game, 0, 0, 'sprites');
+		game.add.existing(self);
+		game.physics.enable(self);
+		self.body.setSize(16, 16);
+		self.anchor.setTo(0.5, 0.5);
+		self.fuseTime = 3000;
+		self.explosionRadius = 1;
+		self.animations.add('tick', ['bomb1', 'bomb2', 'bomb3', 'bomb2']);
+	};
+
+	this._update = function() {
+		if (ticking) {
+			advanceFuse();
+		}
+	};
+
+	var advanceFuse = function() {
+		var endTime = fuseStartTime + self.fuseTime;
+		var done = Date.now() >= endTime;
+		if (done) {
+			explode();
+		}
+	};
+
+	var explode = function() {
+		ticking = false;
+		self.destroy();
+	};
+
+	this._startFuse = function() {
+		fuseStartTime = Date.now();
+		this.animations.play('tick', 3, true);
+		ticking = true;
+	};
+
+	construct();
 };
 
 Bomb.prototype = Object.create(Phaser.Sprite.prototype);
 Bomb.prototype.constructor = Bomb;
 
 Bomb.prototype.update = function() {
-	this.body.immovable = this.body.immovable || !game.physics.arcade.overlap(this.body, bombers);
-
-	if (this.fuseStartTime) {
-		var endTime = this.fuseStartTime + this.fuseTime;
-		var pctDone = (endTime - Date.now()) / parseFloat(this.fuseTime);
-		if (pctDone <= 0) {
-			this.destroy();
-		}
-	}
+	this._update();
 };
 
 Bomb.prototype.startFuse = function() {
-	this.fuseStartTime = Date.now();
-	this.animations.play('tick', 3, true);
+	this._startFuse();
 };
