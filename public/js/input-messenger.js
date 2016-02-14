@@ -1,39 +1,53 @@
-'use strict';
+var InputMessenger = (function() {
+    'use strict';
 
-var InputMessenger = function(game) {
-	var self = this;
+    function InputMessenger(game) {
+        var self = this,
+            cursors = game.input.keyboard.createCursorKeys(),
+            bombKey = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
 
-	this.moveBomber = new Phaser.Signal();
-	this.stopBomber = new Phaser.Signal();
-	this.dropBomb = new Phaser.Signal();
+        this.moveBomber = new Phaser.Signal();
+        this.stopBomber = new Phaser.Signal();
+        this.dropBomb = new Phaser.Signal();
 
-	var cursors = game.input.keyboard.createCursorKeys();
-	var bombKey = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+        this.dispatch = function() {
+            dispatchMovementMessages();
+            dispatchBombMessages();
+        };
 
-	this.dispatch = function() {
-		var hasDirectionalInput = false;
-		if (cursors.right.isDown) {
-			self.moveBomber.dispatch('east');
-			hasDirectionalInput = true;
-		}
-		if (cursors.left.isDown) {
-			self.moveBomber.dispatch('west');
-			hasDirectionalInput = true;
-		}
-		if (cursors.up.isDown) {
-			self.moveBomber.dispatch('north');
-			hasDirectionalInput = true;
-		}
-		if (cursors.down.isDown) {
-			self.moveBomber.dispatch('south');
-			hasDirectionalInput = true;
-		}
-		if (!hasDirectionalInput) {
-			self.stopBomber.dispatch();
-		}
+        var dispatchMovementMessages = function() {
+            dispatchMoveMessage(cursors.right, 'east');
+            dispatchMoveMessage(cursors.left, 'west');
+            dispatchMoveMessage(cursors.up, 'north');
+            dispatchMoveMessage(cursors.down, 'south');
+            dispatchStopMessage();
+        };
 
-		if (bombKey.isDown) {
-			self.dropBomb.dispatch();
-		}
-	};
-};
+        var dispatchMoveMessage = function(cursor, direction) {
+            if (cursor.isDown) {
+                self.moveBomber.dispatch(direction);
+            }
+        };
+
+        var dispatchStopMessage = function() {
+            if (!anyCursorKeysAreDown()) {
+                self.stopBomber.dispatch();
+            }
+        };
+
+        var anyCursorKeysAreDown = function() {
+            return cursors.right.isDown ||
+                cursors.left.isDown ||
+                cursors.up.isDown ||
+                cursors.down.isDown;
+        };
+
+        var dispatchBombMessages = function() {
+            if (bombKey.isDown) {
+                self.dropBomb.dispatch();
+            }
+        };
+    }
+
+    return InputMessenger;
+})();
