@@ -19,5 +19,8 @@
     "express": "^4.13.4",
     "chai": "*",
     "mocha": "*"
+  },
+  "devDependencies": {
+    "gulp": "^3.9.1"
   }
 }
