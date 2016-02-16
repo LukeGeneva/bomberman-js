@@ -11,7 +11,8 @@ var bases = {
 };
 
 var paths = {
-    js: ['js/*.js'],
+    js: ['js/**/*.js', '!js/lib/**/*.js'],
+    allJs: ['js/lib/phaser.min.js', 'js/*.js'],
     html: ['index.html'],
     assets: ['assets/*']
 };
@@ -21,10 +22,14 @@ gulp.task('clean', function() {
     .pipe(clean());
 });
 
-gulp.task('scripts', ['clean'], function() {
+gulp.task('jshint', function() {
     gulp.src(paths.js, {cwd: bases.pub})
         .pipe(jshint())
-        .pipe(jshint.reporter('default'))
+        .pipe(jshint.reporter('default'));
+});
+
+gulp.task('scripts', ['clean'], function() {
+    gulp.src(paths.allJs, {cwd: bases.pub})
         .pipe(uglify())
         .pipe(concat('app.min.js'))
         .pipe(gulp.dest(bases.dist + 'js/'));
@@ -42,4 +47,4 @@ gulp.task('watch', function() {
     gulp.watch('app/**/*', ['scripts', 'copy']);
 });
 
-gulp.task('default', ['clean', 'scripts', 'copy']);
+gulp.task('default', ['clean', 'jshint', 'scripts', 'copy']);
