@@ -5,6 +5,7 @@ var Bomber = (function() {
 
     function Bomber(game) {
         var self = this;
+        this.bombCapacity = 3;
 
         var construct = function () {
             Phaser.Sprite.call(self, game, 0, 0, 'sprites');
@@ -85,7 +86,9 @@ var Bomber = (function() {
         };
 
         this._createBomb = function () {
-            return new Bomb(self.game);
+            var bomb = new Bomb(self.game);
+            bomb.bomber = self;
+            return bomb;
         };
 
         construct();

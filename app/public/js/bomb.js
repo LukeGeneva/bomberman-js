@@ -6,6 +6,8 @@ var Bomb = (function() {
         var ticking = false;
         var fuseStartTime = 0;
 
+        this.bomber = null;
+
         var construct = function() {
             Phaser.Sprite.call(self, game, 0, 0, 'sprites');
             game.add.existing(self);

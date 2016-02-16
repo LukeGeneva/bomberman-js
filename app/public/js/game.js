@@ -181,12 +181,24 @@
 	}
 
 	function handleBombDropRequest() {
-		var bomb = player.createBomb();
-		var bombTile = map.getTileWorldXY(player.body.center.x, player.body.center.y);
-		centerBombInTile(bomb, bombTile);
-		bombGroup.add(bomb);
-		bomb.startFuse();
+        if (getPlayerActiveBombCount() < player.bombCapacity) {
+            var bomb = player.createBomb();
+            var bombTile = map.getTileWorldXY(player.body.center.x, player.body.center.y);
+            centerBombInTile(bomb, bombTile);
+            bombGroup.add(bomb);
+            bomb.startFuse();
+        }
 	}
+
+    function getPlayerActiveBombCount() {
+        var count = 0;
+        bombGroup.forEach(function(bomb) {
+            if (bomb.bomber === player) {
+                ++count;
+            }
+        });
+        return count;
+    }
 
 	function centerBombInTile(bomb, tile) {
 		bomb.x = tile.worldX + tile.centerX;

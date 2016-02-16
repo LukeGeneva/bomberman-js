@@ -43,7 +43,7 @@ var InputMessenger = (function() {
         };
 
         var dispatchBombMessages = function() {
-            if (bombKey.isDown) {
+            if (bombKey.justDown) {
                 self.dropBomb.dispatch();
             }
         };

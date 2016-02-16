@@ -3,7 +3,6 @@ var gulp = require('gulp');
 var clean = require('gulp-clean');
 var concat = require('gulp-concat');
 var jshint = require('gulp-jshint');
-var mocha = require('gulp-mocha');
 var uglify = require('gulp-uglify');
 
 var bases = {
@@ -13,7 +12,7 @@ var bases = {
 
 var paths = {
     js: ['js/**/*.js', '!js/lib/**/*.js'],
-    allJs: ['js/lib/phaser.min.js', 'js/*.js'],
+    allJs: ['js/lib/*.js', 'js/*.js'],
     html: ['index.html'],
     assets: ['assets/*']
 };
