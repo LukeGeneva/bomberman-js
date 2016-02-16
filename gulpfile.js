@@ -3,6 +3,7 @@ var gulp = require('gulp');
 var clean = require('gulp-clean');
 var concat = require('gulp-concat');
 var jshint = require('gulp-jshint');
+var mocha = require('gulp-mocha');
 var uglify = require('gulp-uglify');
 
 var bases = {
@@ -16,6 +17,8 @@ var paths = {
     html: ['index.html'],
     assets: ['assets/*']
 };
+
+gulp.task('default', ['clean', 'jshint', 'scripts', 'copy']);
 
 gulp.task('clean', function() {
     return gulp.src(bases.dist)
@@ -44,7 +47,5 @@ gulp.task('copy', ['clean'], function() {
 });
 
 gulp.task('watch', function() {
-    gulp.watch('app/**/*', ['scripts', 'copy']);
+    gulp.watch(['app/**/*'], ['default']);
 });
-
-gulp.task('default', ['clean', 'jshint', 'scripts', 'copy']);
