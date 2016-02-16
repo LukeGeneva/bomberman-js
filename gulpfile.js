@@ -15,11 +15,10 @@ var paths = {
     js: ['js/**/*.js', '!js/lib/**/*.js'],
     allJs: ['js/lib/phaser.min.js', 'js/*.js'],
     html: ['index.html'],
-    assets: ['assets/*'],
-    tests: ['tests/**/*.js']
+    assets: ['assets/*']
 };
 
-gulp.task('default', ['clean', 'jshint', 'test', 'scripts', 'copy']);
+gulp.task('default', ['clean', 'jshint', 'scripts', 'copy']);
 
 gulp.task('clean', function() {
     return gulp.src(bases.dist)
@@ -30,11 +29,6 @@ gulp.task('jshint', function() {
     gulp.src(paths.js, {cwd: bases.pub})
         .pipe(jshint())
         .pipe(jshint.reporter('default'));
-});
-
-gulp.task('test', function() {
-    gulp.src(paths.tests)
-        .pipe(mocha({reporter: 'list'}));
 });
 
 gulp.task('scripts', ['clean'], function() {
@@ -53,5 +47,5 @@ gulp.task('copy', ['clean'], function() {
 });
 
 gulp.task('watch', function() {
-    gulp.watch('app/**/*', ['scripts', 'copy']);
+    gulp.watch(['app/**/*'], ['default']);
 });
