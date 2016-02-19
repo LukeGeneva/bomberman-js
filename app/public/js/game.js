@@ -181,9 +181,9 @@
 	}
 
 	function handleBombDropRequest() {
-        if (getPlayerActiveBombCount() < player.bombCapacity) {
+		var bombTile = map.getTileWorldXY(player.body.center.x, player.body.center.y);
+        if (getPlayerActiveBombCount() < player.bombCapacity && !tileHasBomb(bombTile)) {
             var bomb = player.createBomb();
-            var bombTile = map.getTileWorldXY(player.body.center.x, player.body.center.y);
             centerBombInTile(bomb, bombTile);
             bombGroup.add(bomb);
             bomb.startFuse();
@@ -200,9 +200,27 @@
         return count;
     }
 
-	function centerBombInTile(bomb, tile) {
-		bomb.x = tile.worldX + tile.centerX;
-		bomb.y = tile.worldY + tile.centerY;
+	function tileHasBomb(tile) {
+        var bombHasTile = false;
+		bombGroup.forEach(function(bomb) {
+            var bombTile = map.getTileWorldXY(bomb.x, bomb.y);
+            if (bombTile.x === tile.x && bombTile.y === tile.y) {
+                bombHasTile = true;
+            }
+		});
+		return bombHasTile;
 	}
+
+	function centerBombInTile(bomb, tile) {
+        var center = getTileWorldCenter(tile);
+		bomb.x = center.x;
+		bomb.y = center.y;
+	}
+
+    function getTileWorldCenter(tile) {
+        var x = tile.worldX + tile.centerX;
+        var y = tile.worldY + tile.centerY;
+        return new Phaser.Point(x, y);
+    }
 
 })();
