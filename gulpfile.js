@@ -17,7 +17,9 @@ var paths = {
     assets: ['assets/*']
 };
 
-gulp.task('default', ['clean', 'jshint', 'scripts', 'copy']);
+gulp.task('default', ['build-dev']);
+gulp.task('build-dev', ['clean', 'jshint', 'scripts-dev', 'copy']);
+gulp.task('build-release', ['clean', 'jshint', 'scripts-release', 'copy']);
 
 gulp.task('clean', function() {
     return gulp.src(bases.dist)
@@ -30,7 +32,13 @@ gulp.task('jshint', function() {
         .pipe(jshint.reporter('default'));
 });
 
-gulp.task('scripts', ['clean'], function() {
+gulp.task('scripts-dev', ['clean'], function() {
+    gulp.src(paths.allJs, {cwd: bases.pub})
+        .pipe(concat('app.min.js'))
+        .pipe(gulp.dest(bases.dist + 'js/'));
+});
+
+gulp.task('scripts-release', ['clean'], function() {
     gulp.src(paths.allJs, {cwd: bases.pub})
         .pipe(uglify())
         .pipe(concat('app.min.js'))
