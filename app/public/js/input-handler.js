@@ -1,7 +1,7 @@
-var InputMessenger = (function() {
+var InputHandler = (function() {
     'use strict';
 
-    function InputMessenger(game) {
+    function InputHandler(game) {
         var self = this,
             cursors = game.input.keyboard.createCursorKeys(),
             bombKey = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
@@ -49,5 +49,5 @@ var InputMessenger = (function() {
         };
     }
 
-    return InputMessenger;
+    return InputHandler;
 })();
