@@ -35,6 +35,7 @@ var Bomb = (function() {
 
         var explode = function() {
             ticking = false;
+            game.
             self.destroy();
         };
 
