@@ -1,4 +1,4 @@
-/*globals Bomber, InputMessenger */
+/*globals Bomber, InputHandler */
 
 (function() {
 	'use strict';
@@ -32,7 +32,7 @@
 	var bomberGroup;
 	var bombGroup;
 
-	var inputMessenger;
+	var inputHandler;
 
 	function create() {
 		initPhysics();
@@ -60,8 +60,8 @@
 	}
 
 	function initGroups() {
-		bomberGroup = game.add.group();
 		bombGroup = game.add.group();
+		bomberGroup = game.add.group();
 	}
 
 	function initPlayer() {
@@ -72,10 +72,10 @@
 	}
 
 	function initInputHandlers() {
-		inputMessenger = new InputMessenger(game);
-		inputMessenger.moveBomber.add(handleMoveRequest);
-		inputMessenger.stopBomber.add(handleStopRequest);
-		inputMessenger.dropBomb.add(handleBombDropRequest);
+		inputHandler = new InputHandler(game);
+		inputHandler.moveBomber.add(handleMoveRequest);
+		inputHandler.stopBomber.add(handleStopRequest);
+		inputHandler.dropBomb.add(handleBombDropRequest);
 	}
 
 	function update() {
@@ -85,7 +85,7 @@
 			bomb.body.immovable = bomb.body.immovable || !game.physics.arcade.overlap(bomb.body, bomberGroup);
 		});
 
-		inputMessenger.dispatch();
+		inputHandler.dispatch();
 	}
 
 	function runCollisions() {
