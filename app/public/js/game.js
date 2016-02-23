@@ -186,12 +186,17 @@
 	function handleBombDropRequest() {
 		var bombTile = map.getTileWorldXY(player.body.center.x, player.body.center.y);
         if (getPlayerActiveBombCount() < player.bombCapacity && !tileHasBomb(bombTile)) {
-            var bomb = player.createBomb();
+            var bomb = player.dropBomb();
             centerBombInTile(bomb, bombTile);
             bombGroup.add(bomb);
+            bomb.explode.add(handleBombExplosion);
             bomb.startFuse();
         }
 	}
+
+    function handleBombExplosion(bomb) {
+        console.log('Explosion at ' + bomb.x + ', ' + bomb.y);
+    }
 
     function getPlayerActiveBombCount() {
         var count = 0;
