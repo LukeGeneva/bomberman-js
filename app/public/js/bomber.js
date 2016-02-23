@@ -85,7 +85,7 @@ var Bomber = (function() {
             self.animations.frameName = self.heading[0] + '1';
         };
 
-        this._createBomb = function () {
+        this._dropBomb = function () {
             var bomb = new Bomb(self.game);
             bomb.bomber = self;
             return bomb;
@@ -100,8 +100,8 @@ var Bomber = (function() {
         this._update();
     };
 
-    Bomber.prototype.createBomb = function () {
-        return this._createBomb();
+    Bomber.prototype.dropBomb = function () {
+        return this._dropBomb();
     };
 
     return Bomber;
