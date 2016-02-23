@@ -4,10 +4,10 @@
 	'use strict';
 
 	var game = new Phaser.Game(
-		800, 600,
+		240, 208,
 		Phaser.AUTO,
-		'Bomberman JS',
-		{ preload: preload, create: create, update: update });
+		'game',
+        { preload: preload, create: create, update: update });
 
 	function preload() {
 		game.load.atlas(
@@ -23,6 +23,9 @@
 			Phaser.Tilemap.TILED_JSON);
 
 		game.load.image('tiles', '../assets/tiles.png');
+        game.stage.smoothed = false;
+        game.scale.setMinMax(480, 416);
+        game.scale.refresh();
 	}
 
 	var map;
