@@ -20,9 +20,16 @@ var Explosion = (function() {
         };
 
         this._update = function() {
-            if (!exploding) {
+            if (exploding) {
+                game.physics.arcade.overlap(game.groups.bombers, self, killBomber);
+            }
+            else {
                 explode();
             }
+        };
+
+        var killBomber = function(explosion, bomber) {
+            bomber.die();
         };
 
         var explode = function() {

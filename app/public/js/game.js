@@ -80,21 +80,17 @@
 
 	function update() {
 		runCollisions();
-
-		game.groups.bombs.forEach(function(bomb) {
-			bomb.body.immovable = bomb.body.immovable || !game.physics.arcade.overlap(bomb.body, game.groups.bombers);
-		});
-
 		inputHandler.dispatch();
 	}
 
 	function runCollisions() {
 		game.physics.arcade.collide(game.groups.bombers, game.map.fixedTileLayer);
 		game.physics.arcade.collide(game.groups.bombers, game.groups.bombs);
-        game.physics.arcade.overlap(game.groups.bombers, game.groups.explosions, function(bomber) {
-            bomber.die();
-        });
 	}
+
+    function killBomber(bomber) {
+        bomber.die();
+    }
 
 	function handleMoveRequest(direction) {
 		player.body.velocity.x = 0;
@@ -124,10 +120,10 @@
         var playerTile = getPlayerTile();
         var destinationTile;
         if (player.body.blocked.up) {
-            destinationTile = game.map.getTileAbove(game.map.getLayer(game.map.fixedTileLayer), playerTile.x, playerTile.y);
+            destinationTile = game.map.getTileAbove(game.map.fixedTileLayer.index, playerTile.x, playerTile.y);
         }
         else if (player.body.blocked.down) {
-            destinationTile = game.map.getTileBelow(game.map.getLayer(game.map.fixedTileLayer), playerTile.x, playerTile.y);
+            destinationTile = game.map.getTileBelow(game.map.fixedTileLayer.index, playerTile.x, playerTile.y);
         }
         else {
             return 0;
@@ -151,10 +147,10 @@
         var playerTile = getPlayerTile();
         var destinationTile;
         if (player.body.blocked.left) {
-            destinationTile = game.map.getTileLeft(game.map.getLayer(game.map.fixedTileLayer), playerTile.x, playerTile.y);
+            destinationTile = game.map.getTileLeft(game.map.fixedTileLayer.index, playerTile.x, playerTile.y);
         }
         else if (player.body.blocked.right) {
-            destinationTile = game.map.getTileRight(game.map.getLayer(game.map.fixedTileLayer), playerTile.x, playerTile.y);
+            destinationTile = game.map.getTileRight(game.map.fixedTileLayer.index, playerTile.x, playerTile.y);
         }
         else {
             return 0;

@@ -20,6 +20,8 @@ var Bomb = (function() {
         };
 
         this._update = function() {
+			self.body.immovable = self.body.immovable || !game.physics.arcade.overlap(self.body, game.groups.bombers);
+
             if (ticking) {
                 advanceFuse();
             }
