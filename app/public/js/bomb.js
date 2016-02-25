@@ -17,7 +17,6 @@ var Bomb = (function() {
             self.fuseTime = 3000;
             self.explosionRadius = 1;
             self.animations.add('tick', ['bomb1', 'bomb2', 'bomb3', 'bomb2']);
-            self.explode = new Phaser.Signal();
         };
 
         this._update = function() {
@@ -36,7 +35,10 @@ var Bomb = (function() {
 
         var explode = function() {
             ticking = false;
-            self.explode.dispatch(self);
+            var explosion = new Explosion(game);
+            explosion.x = self.x;
+            explosion.y = self.y;
+            game.groups.explosions.add(explosion);
             self.destroy();
         };
 

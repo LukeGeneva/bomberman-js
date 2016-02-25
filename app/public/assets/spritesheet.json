@@ -112,6 +112,38 @@
 	"spriteSourceSize": {"x":0,"y":0,"w":15,"h":19},
 	"sourceSize": {"w":15,"h":19}
 },
+"explosion1":
+{
+	"frame": {"x":393,"y":1,"w":12,"h":12},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":12,"h":12},
+	"sourceSize": {"w":12,"h":12}
+},
+"explosion2":
+{
+	"frame": {"x":407,"y":1,"w":12,"h":12},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":12,"h":12},
+	"sourceSize": {"w":12,"h":12}
+},
+"explosion3":
+{
+	"frame": {"x":421,"y":1,"w":12,"h":12},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":12,"h":12},
+	"sourceSize": {"w":12,"h":12}
+},
+"explosion4":
+{
+	"frame": {"x":435,"y":1,"w":12,"h":12},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":12,"h":12},
+	"sourceSize": {"w":12,"h":12}
+},
 "n1":
 {
 	"frame": {"x":225,"y":1,"w":14,"h":19},
@@ -189,8 +221,8 @@
 	"version": "1.0",
 	"image": "spritesheet.png",
 	"format": "RGBA8888",
-	"size": {"w":392,"h":21},
+	"size": {"w":448,"h":21},
 	"scale": "1",
-	"smartupdate": "$TexturePacker:SmartUpdate:b78148f10faa910a07ec6997e74f1cbd:cbbaeffccb159c063d82e6aebd706d99:729adc6043343cfda41c447ce8f464d6$"
+	"smartupdate": "$TexturePacker:SmartUpdate:f829fc3802c9efe3896929845c27de58:06e979b411043de0ee4543317d733aa3:729adc6043343cfda41c447ce8f464d6$"
 }
 }

@@ -49,6 +49,10 @@ var Bomber = (function() {
                     showDefaultWalkingFrame();
                 }
             }
+            else {
+                self.body.velocity.x = 0;
+                self.body.velocity.y = 0;
+            }
         };
 
         var autoSetHeading = function () {
@@ -91,17 +95,26 @@ var Bomber = (function() {
             return bomb;
         };
 
+        this._die = function () {
+            self.alive = false;
+            self.animations.play('die', 8, false, true);
+        };
+
         construct();
     }
 
     Bomber.prototype = Object.create(Phaser.Sprite.prototype);
 
-    Bomber.prototype.update = function () {
+    Bomber.prototype.update = function() {
         this._update();
     };
 
-    Bomber.prototype.dropBomb = function () {
+    Bomber.prototype.dropBomb = function() {
         return this._dropBomb();
+    };
+
+    Bomber.prototype.die = function() {
+        this._die();
     };
 
     return Bomber;

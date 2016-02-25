@@ -28,12 +28,7 @@
         game.scale.refresh();
 	}
 
-	var map;
-	var fixedTileLayer;
-
 	var player;
-	var bomberGroup;
-	var bombGroup;
 
 	var inputHandler;
 
@@ -50,28 +45,30 @@
 	}
 
 	function initMap() {
-		map = game.add.tilemap('tilemap');
-		map.addTilesetImage('tiles');
+		game.map = game.add.tilemap('tilemap');
+		game.map.addTilesetImage('tiles');
 		initMapLayers();
-		map.setCollision(1, true, 'Fixed');
+		game.map.setCollision(1, true, 'Fixed');
 	}
 
 	function initMapLayers() {
-		map.createLayer('Base');
-		fixedTileLayer = map.createLayer('Fixed');
-		fixedTileLayer.resizeWorld();
+		game.map.createLayer('Base');
+		game.map.fixedTileLayer = game.map.createLayer('Fixed');
+		game.map.fixedTileLayer.resizeWorld();
 	}
 
 	function initGroups() {
-		bombGroup = game.add.group();
-		bomberGroup = game.add.group();
+        game.groups = {};
+		game.groups.bombs = game.add.group();
+        game.groups.explosions = game.add.group();
+		game.groups.bombers = game.add.group();
 	}
 
 	function initPlayer() {
 		player = new Bomber(game);
 		player.x = 24;
 		player.y = 24;
-		bomberGroup.add(player);
+		game.groups.bombers.add(player);
 	}
 
 	function initInputHandlers() {
@@ -84,16 +81,19 @@
 	function update() {
 		runCollisions();
 
-		bombGroup.forEach(function(bomb) {
-			bomb.body.immovable = bomb.body.immovable || !game.physics.arcade.overlap(bomb.body, bomberGroup);
+		game.groups.bombs.forEach(function(bomb) {
+			bomb.body.immovable = bomb.body.immovable || !game.physics.arcade.overlap(bomb.body, game.groups.bombers);
 		});
 
 		inputHandler.dispatch();
 	}
 
 	function runCollisions() {
-		game.physics.arcade.collide(bomberGroup, fixedTileLayer);
-		game.physics.arcade.collide(bomberGroup, bombGroup);
+		game.physics.arcade.collide(game.groups.bombers, game.map.fixedTileLayer);
+		game.physics.arcade.collide(game.groups.bombers, game.groups.bombs);
+        game.physics.arcade.overlap(game.groups.bombers, game.groups.explosions, function(bomber) {
+            bomber.die();
+        });
 	}
 
 	function handleMoveRequest(direction) {
@@ -124,10 +124,10 @@
         var playerTile = getPlayerTile();
         var destinationTile;
         if (player.body.blocked.up) {
-            destinationTile = map.getTileAbove(map.getLayer(fixedTileLayer), playerTile.x, playerTile.y);
+            destinationTile = game.map.getTileAbove(game.map.getLayer(game.map.fixedTileLayer), playerTile.x, playerTile.y);
         }
         else if (player.body.blocked.down) {
-            destinationTile = map.getTileBelow(map.getLayer(fixedTileLayer), playerTile.x, playerTile.y);
+            destinationTile = game.map.getTileBelow(game.map.getLayer(game.map.fixedTileLayer), playerTile.x, playerTile.y);
         }
         else {
             return 0;
@@ -151,10 +151,10 @@
         var playerTile = getPlayerTile();
         var destinationTile;
         if (player.body.blocked.left) {
-            destinationTile = map.getTileLeft(map.getLayer(fixedTileLayer), playerTile.x, playerTile.y);
+            destinationTile = game.map.getTileLeft(game.map.getLayer(game.map.fixedTileLayer), playerTile.x, playerTile.y);
         }
         else if (player.body.blocked.right) {
-            destinationTile = map.getTileRight(map.getLayer(fixedTileLayer), playerTile.x, playerTile.y);
+            destinationTile = game.map.getTileRight(game.map.getLayer(game.map.fixedTileLayer), playerTile.x, playerTile.y);
         }
         else {
             return 0;
@@ -175,7 +175,7 @@
     }
 
     function getPlayerTile() {
-        return map.getTileWorldXY(player.body.center.x, player.body.center.y);
+        return game.map.getTileWorldXY(player.body.center.x, player.body.center.y);
     }
 
 	function handleStopRequest() {
@@ -184,23 +184,18 @@
 	}
 
 	function handleBombDropRequest() {
-		var bombTile = map.getTileWorldXY(player.body.center.x, player.body.center.y);
+		var bombTile = game.map.getTileWorldXY(player.body.center.x, player.body.center.y);
         if (getPlayerActiveBombCount() < player.bombCapacity && !tileHasBomb(bombTile)) {
             var bomb = player.dropBomb();
             centerBombInTile(bomb, bombTile);
-            bombGroup.add(bomb);
-            bomb.explode.add(handleBombExplosion);
+            game.groups.bombs.add(bomb);
             bomb.startFuse();
         }
 	}
 
-    function handleBombExplosion(bomb) {
-        console.log('Explosion at ' + bomb.x + ', ' + bomb.y);
-    }
-
     function getPlayerActiveBombCount() {
         var count = 0;
-        bombGroup.forEach(function(bomb) {
+        game.groups.bombs.forEach(function(bomb) {
             if (bomb.bomber === player) {
                 ++count;
             }
@@ -210,8 +205,8 @@
 
 	function tileHasBomb(tile) {
         var bombHasTile = false;
-		bombGroup.forEach(function(bomb) {
-            var bombTile = map.getTileWorldXY(bomb.x, bomb.y);
+		game.groups.bombs.forEach(function(bomb) {
+            var bombTile = game.map.getTileWorldXY(bomb.x, bomb.y);
             if (bombTile.x === tile.x && bombTile.y === tile.y) {
                 bombHasTile = true;
             }
