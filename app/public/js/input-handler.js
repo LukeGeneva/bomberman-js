@@ -6,32 +6,28 @@ var InputHandler = (function() {
             cursors = game.input.keyboard.createCursorKeys(),
             bombKey = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
 
-        this.moveBomber = new Phaser.Signal();
-        this.stopBomber = new Phaser.Signal();
-        this.dropBomb = new Phaser.Signal();
-
-        this.dispatch = function() {
-            dispatchMovementMessages();
-            dispatchBombMessages();
+        this.handle = function() {
+            handleMovementInput();
+            handleBombInput();
         };
 
-        var dispatchMovementMessages = function() {
-            dispatchMoveMessage(cursors.right, 'east');
-            dispatchMoveMessage(cursors.left, 'west');
-            dispatchMoveMessage(cursors.up, 'north');
-            dispatchMoveMessage(cursors.down, 'south');
-            dispatchStopMessage();
+        var handleMovementInput = function() {
+            handleMoveInput(cursors.right, 'east');
+            handleMoveInput(cursors.left, 'west');
+            handleMoveInput(cursors.up, 'north');
+            handleMoveInput(cursors.down, 'south');
+            handleStopInput();
         };
 
-        var dispatchMoveMessage = function(cursor, direction) {
+        var handleMoveInput = function(cursor, direction) {
             if (cursor.isDown) {
-                self.moveBomber.dispatch(direction);
+                game.inputQueue.push('move-' + direction);
             }
         };
 
-        var dispatchStopMessage = function() {
+        var handleStopInput = function() {
             if (!anyCursorKeysAreDown()) {
-                self.stopBomber.dispatch();
+                game.inputQueue.push('stop');
             }
         };
 
@@ -42,9 +38,9 @@ var InputHandler = (function() {
                 cursors.down.isDown;
         };
 
-        var dispatchBombMessages = function() {
+        var handleBombInput = function() {
             if (bombKey.justDown) {
-                self.dropBomb.dispatch();
+                game.inputQueue.push('drop-bomb');
             }
         };
     }
