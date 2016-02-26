@@ -13,53 +13,45 @@ var MovementHelper = (function() {
         var applyHelperXVelocity = function() {
             var bomberTile = getCurrentTile();
             var destinationTile;
-            if (self.body.blocked.up) {
+            if (bomber.body.blocked.up) {
                 destinationTile = game.map.getTileAbove(game.map.fixedTileLayer.index, bomberTile.x, bomberTile.y);
             }
-            else if (self.body.blocked.down) {
+            else if (bomber.body.blocked.down) {
                 destinationTile = game.map.getTileBelow(game.map.fixedTileLayer.index, bomberTile.x, bomberTile.y);
             }
-            else {
-                return;
-            }
 
-            if (destinationTile.index !== -1) {
-                return;
+            if (destinationTile && destinationTile.index === -1) {
+                var bomberTileCenter = bomberTile.left + bomberTile.width / 2;
+                var offset = bomberTileCenter - bomber.body.center.x;
+                var absoluteOffset = Math.abs(offset);
+                if (absoluteOffset !== 0 && absoluteOffset < HELPER_THRESHOLD) {
+                    bomber.body.velocity.x = offset > 0 ? bomber.speed : -bomber.speed;
+                }
             }
-
-            var bomberTileCenter = bomberTile.left + bomberTile.width / 2;
-            var offset = bomberTileCenter - self.body.center.x;
-            var absoluteOffset = Math.abs(offset);
-            if (absoluteOffset === 0 || absoluteOffset > HELPER_THRESHOLD) {
-                return;
-            }
-            self.body.velocity.x = offset > 0 ? self.speed : -self.speed;
         };
 
         var applyHelperYVelocity = function() {
             var bomberTile = getCurrentTile();
             var destinationTile;
-            if (self.body.blocked.left) {
+            if (bomber.body.blocked.left) {
                 destinationTile = game.map.getTileLeft(game.map.fixedTileLayer.index, bomberTile.x, bomberTile.y);
             }
-            else if (self.body.blocked.right) {
+            else if (bomber.body.blocked.right) {
                 destinationTile = game.map.getTileRight(game.map.fixedTileLayer.index, bomberTile.x, bomberTile.y);
             }
-            else {
-                return;
-            }
 
-            if (destinationTile.index !== -1) {
-                return;
+            if (destinationTile && destinationTile.index === -1) {
+                var bomberTileCenter = bomberTile.top + bomberTile.height / 2;
+                var offset = bomberTileCenter - bomber.body.center.y;
+                var absoluteOffset = Math.abs(offset);
+                if (absoluteOffset !== 0 && absoluteOffset < HELPER_THRESHOLD) {
+                    bomber.body.velocity.y = offset > 0 ? bomber.speed : -bomber.speed;
+                }
             }
+        };
 
-            var bomberTileCenter = bomberTile.top + bomberTile.height / 2;
-            var offset = bomberTileCenter - self.body.center.y;
-            var absoluteOffset = Math.abs(offset);
-            if (absoluteOffset === 0 || absoluteOffset > HELPER_THRESHOLD) {
-                return;
-            }
-            self.body.velocity.y = offset > 0 ? self.speed : -self.speed;
+        var getCurrentTile = function() {
+            return game.map.getTileWorldXY(bomber.body.center.x, bomber.body.center.y);
         };
 
     }
