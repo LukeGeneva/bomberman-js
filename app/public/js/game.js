@@ -67,7 +67,6 @@
 		player = new Bomber(game);
 		player.x = 24;
 		player.y = 24;
-		game.groups.bombers.add(player);
 	}
 
 	function initInputHandler() {

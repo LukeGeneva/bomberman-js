@@ -5,12 +5,14 @@ var Bomber = (function() {
 
     function Bomber(game) {
         var self = this;
+        var movementHelper = new MovementHelper(game, self);
         var bombCapacity = 3;
         var activeBombs = 0;
 
         var construct = function () {
             Phaser.Sprite.call(self, game, 0, 0, 'sprites');
             game.add.existing(self);
+            game.groups.bombers.add(self);
             applyPhysics();
             applyAnimations();
             applyDefaults();
@@ -88,67 +90,13 @@ var Bomber = (function() {
             self.animations.frameName = self.heading[0] + '1';
         };
 
-        var applyHelperXVelocity = function() {
-            var bomberTile = getCurrentTile();
-            var destinationTile;
-            if (self.body.blocked.up) {
-                destinationTile = game.map.getTileAbove(game.map.fixedTileLayer.index, bomberTile.x, bomberTile.y);
-            }
-            else if (self.body.blocked.down) {
-                destinationTile = game.map.getTileBelow(game.map.fixedTileLayer.index, bomberTile.x, bomberTile.y);
-            }
-            else {
-                return;
-            }
-
-            if (destinationTile.index !== -1) {
-                return;
-            }
-
-            var bomberTileCenter = bomberTile.left + bomberTile.width / 2;
-            var helperThreshold = 8;
-            var offset = bomberTileCenter - self.body.center.x;
-            var absoluteOffset = Math.abs(offset);
-            if (absoluteOffset === 0 || absoluteOffset > helperThreshold) {
-                return;
-            }
-            self.body.velocity.x = offset > 0 ? self.speed : -self.speed;
-        };
-
-        var applyHelperYVelocity = function() {
-            var bomberTile = getCurrentTile();
-            var destinationTile;
-            if (self.body.blocked.left) {
-                destinationTile = game.map.getTileLeft(game.map.fixedTileLayer.index, bomberTile.x, bomberTile.y);
-            }
-            else if (self.body.blocked.right) {
-                destinationTile = game.map.getTileRight(game.map.fixedTileLayer.index, bomberTile.x, bomberTile.y);
-            }
-            else {
-                return;
-            }
-
-            if (destinationTile.index !== -1) {
-                return;
-            }
-
-            var bomberTileCenter = bomberTile.top + bomberTile.height / 2;
-            var helperThreshold = 8;
-            var offset = bomberTileCenter - self.body.center.y;
-            var absoluteOffset = Math.abs(offset);
-            if (absoluteOffset === 0 || absoluteOffset > helperThreshold) {
-                return;
-            }
-            self.body.velocity.y = offset > 0 ? self.speed : -self.speed;
-        };
 
         var getCurrentTile = function() {
             return game.map.getTileWorldXY(self.body.center.x, self.body.center.y);
         };
 
         this._update = function () {
-            applyHelperXVelocity();
-            applyHelperYVelocity();
+            movementHelper.help();
         };
 
         var dropBomb = function () {
