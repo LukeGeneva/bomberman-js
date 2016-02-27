@@ -39,11 +39,13 @@ var Bomb = (function() {
         };
 
         this._explode = function() {
-            var bombTile = game.map.getSpriteBodyTile(self);
-            var spreader = new ExplosionSpreader(game, bombTile, self.explosionRadius);
-            spreader.spread();
-            self.exploded.dispatch();
-            hasExploded = true;
+            if (!hasExploded) {
+                var bombTile = game.map.getSpriteBodyTile(self);
+                var spreader = new ExplosionSpreader(game, bombTile, self.explosionRadius);
+                spreader.spread();
+                self.exploded.dispatch();
+                hasExploded = true;
+            }
         };
 
         construct();

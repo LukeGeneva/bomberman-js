@@ -34,7 +34,7 @@ var ExplosionSpreader = (function() {
         };
 
         var continueSpread = function(spreadFunction) {
-            if (explosionCanSpread()) {
+            if (currentTile && explosionCanSpread()) {
                 createExplosion();
                 explosionDistance--;
                 spreadFunction();
