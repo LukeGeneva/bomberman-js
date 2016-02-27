@@ -19,7 +19,7 @@ var Bomber = (function() {
         };
 
         var applyPhysics = function () {
-            self.game.physics.enable(self);
+            game.physics.enable(self);
             self.body.collideWorldBounds = true;
             self.body.setSize(13, 8, 0, 6);
         };
@@ -90,40 +90,23 @@ var Bomber = (function() {
             self.animations.frameName = self.heading[0] + '1';
         };
 
-
-        var getCurrentTile = function() {
-            return game.map.getTileWorldXY(self.body.center.x, self.body.center.y);
-        };
-
         this._update = function () {
             movementHelper.help();
         };
 
         var dropBomb = function () {
-            var bomb = new Bomb(self.game);
-            bomb.bomber = self;
-            bomb.centerInTile(getCurrentTile());
-            bomb.startFuse();
+            var bomb = new Bomb(game, self.body.x, self.body.y);
             bomb.exploded.add(function() {
                 activeBombs--;
             });
             activeBombs++;
+            var bomberTile = game.map.getSpriteBodyTile(self);
+            game.map.centerSpriteInTile(bomb, bomberTile);
         };
 
         var canDropBomb = function() {
-            var bombTile = getCurrentTile();
-            return activeBombs < bombCapacity && !tileHasBomb(bombTile);
-        };
-
-        var tileHasBomb = function(tile) {
-            var hasBomb = false;
-            game.groups.bombs.forEach(function(bomb) {
-                var bombTile = game.map.getTileWorldXY(bomb.x, bomb.y);
-                if (bombTile.x === tile.x && bombTile.y === tile.y) {
-                    hasBomb = true;
-                }
-            });
-            return hasBomb;
+            var bombTile = game.map.getSpriteBodyTile(self);
+            return activeBombs < bombCapacity && !game.map.tileHasBomb(bombTile);
         };
 
         this._die = function () {

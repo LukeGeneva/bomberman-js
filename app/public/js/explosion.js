@@ -9,6 +9,7 @@ var Explosion = (function() {
             Phaser.Sprite.call(self, game, 0, 0, 'sprites');
             game.add.existing(self);
             game.physics.enable(self);
+            game.groups.explosions.add(self);
             self.body.setSize(16, 16);
             self.anchor.setTo(0.5, 0.5);
             self.immovable = true;
@@ -20,16 +21,9 @@ var Explosion = (function() {
         };
 
         this._update = function() {
-            if (exploding) {
-                game.physics.arcade.overlap(game.groups.bombers, self, killBomber);
-            }
-            else {
+            if (!exploding) {
                 explode();
             }
-        };
-
-        var killBomber = function(explosion, bomber) {
-            bomber.die();
         };
 
         var explode = function() {

@@ -3,12 +3,13 @@ var MovementHelper = (function() {
 
     function MovementHelper(game, bomber) {
 
-        const HELPER_THRESHOLD = 8;
+        var HELPER_THRESHOLD = 8;
+        var FIXED_TILE_INDEX = -1;
 
         this.help = function() {
             applyHelperXVelocity();
             applyHelperYVelocity();
-        }
+        };
 
         var applyHelperXVelocity = function() {
             var bomberTile = getCurrentTile();
@@ -20,7 +21,7 @@ var MovementHelper = (function() {
                 destinationTile = game.map.getTileBelow(game.map.fixedTileLayer.index, bomberTile.x, bomberTile.y);
             }
 
-            if (destinationTile && destinationTile.index === -1) {
+            if (destinationTile && destinationTile.index === FIXED_TILE_INDEX) {
                 var bomberTileCenter = bomberTile.left + bomberTile.width / 2;
                 var offset = bomberTileCenter - bomber.body.center.x;
                 var absoluteOffset = Math.abs(offset);
@@ -40,7 +41,7 @@ var MovementHelper = (function() {
                 destinationTile = game.map.getTileRight(game.map.fixedTileLayer.index, bomberTile.x, bomberTile.y);
             }
 
-            if (destinationTile && destinationTile.index === -1) {
+            if (destinationTile && destinationTile.index === FIXED_TILE_INDEX) {
                 var bomberTileCenter = bomberTile.top + bomberTile.height / 2;
                 var offset = bomberTileCenter - bomber.body.center.y;
                 var absoluteOffset = Math.abs(offset);

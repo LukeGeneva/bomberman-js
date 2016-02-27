@@ -1,20 +1,20 @@
 var Bomb = (function() {
     'use strict';
 
-    function Bomb(game) {
+    function Bomb(game, x, y) {
         var self = this;
-        var ticking = false;
-        var fuseStartTime = 0;
-
-        this.bomber = null;
+        var fuseStartTime = Date.now();
 
         var construct = function() {
             Phaser.Sprite.call(self, game, 0, 0, 'sprites');
             game.add.existing(self);
-            game.physics.enable(self);
             game.groups.bombs.add(self);
-            self.body.setSize(16, 16);
             self.anchor.setTo(0.5, 0.5);
+            self.x = x;
+            self.y = y;
+
+            game.physics.enable(self);
+            self.body.setSize(16, 16);
             self.fuseTime = 3000;
             self.explosionRadius = 1;
             self.animations.add('tick', ['bomb1', 'bomb2', 'bomb3', 'bomb2']);
@@ -22,11 +22,9 @@ var Bomb = (function() {
         };
 
         this._update = function() {
+            self.animations.play('tick', 3, true);
 			self.body.immovable = self.body.immovable || !game.physics.arcade.overlap(self.body, game.groups.bombers);
-
-            if (ticking) {
-                advanceFuse();
-            }
+            advanceFuse();
         };
 
         var advanceFuse = function() {
@@ -38,31 +36,11 @@ var Bomb = (function() {
         };
 
         var explode = function() {
-            ticking = false;
-            var explosion = new Explosion(game);
-            explosion.x = self.x;
-            explosion.y = self.y;
-            game.groups.explosions.add(explosion);
+            var bombTile = game.map.getSpriteBodyTile(self);
+            var spreader = new ExplosionSpreader(game, bombTile, self.explosionRadius);
+            spreader.spread();
             self.exploded.dispatch();
             self.destroy();
-        };
-
-        this._startFuse = function() {
-            fuseStartTime = Date.now();
-            self.animations.play('tick', 3, true);
-            ticking = true;
-        };
-
-        this._centerInTile = function(tile) {
-            var center = getTileWorldCenter(tile);
-            self.x = center.x;
-            self.y = center.y;
-        };
-
-        var getTileWorldCenter = function(tile) {
-            var x = tile.worldX + tile.centerX;
-            var y = tile.worldY + tile.centerY;
-            return new Phaser.Point(x, y);
         };
 
         construct();
@@ -72,14 +50,6 @@ var Bomb = (function() {
 
     Bomb.prototype.update = function() {
         this._update();
-    };
-
-    Bomb.prototype.startFuse = function() {
-        this._startFuse();
-    };
-
-    Bomb.prototype.centerInTile = function(tile) {
-        this._centerInTile(tile);
     };
 
     return Bomb;
