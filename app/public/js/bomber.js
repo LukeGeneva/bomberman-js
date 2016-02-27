@@ -71,8 +71,7 @@ var Bomber = (function() {
                             self.animations.play('walk-west');
                             break;
                         case 'stop':
-                            self.body.velocity.x = 0;
-                            self.body.velocity.y = 0;
+                            stop();
                             self.animations.stop();
                             showDefaultWalkingFrame();
                             break;
@@ -111,8 +110,14 @@ var Bomber = (function() {
         };
 
         this._die = function () {
+            stop();
             self.alive = false;
             self.animations.play('die', 8, false, true);
+        };
+
+        var stop = function() {
+            self.body.velocity.x = 0;
+            self.body.velocity.y = 0;
         };
 
         construct();
