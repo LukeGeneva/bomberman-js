@@ -101,6 +101,10 @@
         game.physics.arcade.overlap(game.groups.bombs, game.groups.explosions, function(bomb) {
             bomb.explode();
         });
+        game.physics.arcade.overlap(game.groups.explosions, game.map.breakableTileLayer, function(explosion) {
+            var tile = game.map.getSpriteBodyTile(explosion);
+            game.map.removeTile(tile.x, tile.y, game.map.breakableTileLayer.index);
+        });
 	}
 
 })();

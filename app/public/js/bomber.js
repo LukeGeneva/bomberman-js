@@ -35,7 +35,7 @@ var Bomber = (function() {
         var applyDefaults = function () {
             self.anchor.setTo(0.5, 0.5);
             self.heading = 'south';
-            self.bombRadius = 1;
+            self.bombRadius = 2;
             self.alive = true;
             self.speed = 60;
             self.animations.frameName = 's1';

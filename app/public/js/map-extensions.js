@@ -38,6 +38,11 @@ var MapExtender = (function() {
                 var tile = map.getTile(x, y, map.fixedTileLayer.index);
                 return tile !== null;
             };
+            
+            map.isTileBreakable = function(x, y) {
+                var tile = map.getTile(x, y, map.breakableTileLayer.index);
+                return tile !== null;
+            };
 
         };
     }
