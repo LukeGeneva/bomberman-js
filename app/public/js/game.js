@@ -72,9 +72,8 @@
 	}
 
 	function initPlayer() {
-		player = new Bomber(game);
-		player.x = 24;
-		player.y = 24;
+        var spawner = new Spawner(game);
+        player = spawner.spawn();
 	}
 
 	function initInputHandler() {
