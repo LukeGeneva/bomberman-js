@@ -37,7 +37,7 @@ var Bomber = (function() {
             self.heading = 'south';
             self.bombRadius = 1;
             self.alive = true;
-            self.speed = 80;
+            self.speed = 60;
             self.animations.frameName = 's1';
         };
 
