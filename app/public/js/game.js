@@ -93,11 +93,12 @@
 	function runCollisions() {
 		game.physics.arcade.collide(game.groups.bombers, game.map.fixedTileLayer);
 		game.physics.arcade.collide(game.groups.bombers, game.groups.bombs);
-        game.physics.arcade.overlap(game.groups.bombers, game.groups.explosions, killBomber);
+        game.physics.arcade.overlap(game.groups.bombers, game.groups.explosions, function(bomber) {
+            bomber.die();
+        });
+        game.physics.arcade.overlap(game.groups.bombs, game.groups.explosions, function(bomb) {
+            bomb.explode();
+        });
 	}
-
-    function killBomber(bomber) {
-        bomber.die();
-    }
 
 })();

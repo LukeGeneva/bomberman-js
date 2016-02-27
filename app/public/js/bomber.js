@@ -95,7 +95,8 @@ var Bomber = (function() {
         };
 
         var dropBomb = function () {
-            var bomb = new Bomb(game, self.body.x, self.body.y);
+            var bomb = new Bomb(game);
+            bomb.explosionRadius = self.bombRadius;
             bomb.exploded.add(function() {
                 activeBombs--;
             });
