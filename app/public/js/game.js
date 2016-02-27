@@ -48,12 +48,14 @@
 		game.map.addTilesetImage('tiles');
 		initMapLayers();
 		game.map.setCollision(1, true, 'Fixed');
+		game.map.setCollision(3, true, 'Breakable');
         extendMapFunctions();
 	}
 
 	function initMapLayers() {
 		game.map.baseTileLayer = game.map.createLayer('Base');
 		game.map.fixedTileLayer = game.map.createLayer('Fixed');
+        game.map.breakableTileLayer = game.map.createLayer('Breakable');
 		game.map.fixedTileLayer.resizeWorld();
 	}
 
@@ -92,6 +94,7 @@
 
 	function runCollisions() {
 		game.physics.arcade.collide(game.groups.bombers, game.map.fixedTileLayer);
+		game.physics.arcade.collide(game.groups.bombers, game.map.breakableTileLayer);
 		game.physics.arcade.collide(game.groups.bombers, game.groups.bombs);
         game.physics.arcade.overlap(game.groups.bombers, game.groups.explosions, function(bomber) {
             bomber.die();
